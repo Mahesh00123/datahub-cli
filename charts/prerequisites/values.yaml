@@ -1,7 +1,5 @@
 # Default configuration for pre-requisites to get you started
 # Copy this file and update to the configuration of choice
-elasticsearch:
-  enabled: true   # set this to false, if you want to provide your own ES instance.
 
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
@@ -37,18 +35,6 @@ elasticsearch:
 # Official neo4j chart, supports both community and enterprise editions
 # see https://neo4j.com/docs/operations-manual/current/kubernetes/ for more information
 # source: https://github.com/neo4j/helm-charts
-neo4j:
-  enabled: true
-  nameOverride: neo4j
-  neo4j:
-    name: neo4j
-    edition: "community"
-    acceptLicenseAgreement: "yes"
-    defaultDatabase: "graph.db"
-    password: "datahub"
-    # For better security, add password to neo4j-secrets k8s secret with  neo4j-username neo4j-passwordn and NEO4J_AUTH and uncomment below
-    # NEO4J_AUTH: should be composed like so: {Username}/{Password}
-    # passwordFromSecret: neo4j-secrets
 
   # Set security context for pod
   securityContext:
@@ -72,41 +58,12 @@ neo4j:
   env:
     NEO4J_PLUGINS: '["apoc"]'
 
-mysql:
-  enabled: true
-  auth:
-    # For better security, add mysql-secrets k8s secret with mysql-root-password, mysql-replication-password and mysql-password
-    existingSecret: mysql-secrets
-
 postgresql:
-  enabled: false
+  enabled: true
   auth:
     # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
     existingSecret: postgresql-secrets
 
-# Using gcloud-proxy requires the node in a GKE cluster to have Cloud SQL Admin scope,
-# you will need to create a new node and migrate the workload if your current node does not have this scope
-gcloud-sqlproxy:
-  enabled: false
-  # Specify an existing secret holding the cloud-sql service account credentials, if not specify,
-  # the default compute engine service account will be used and it needs to have Cloud SQL Client role
-  existingSecret: ""
-  # The key in the existing secret that stores the credentials
-  existingSecretKey: ""
-  # SQL connection settings
-  cloudsql:
-    # MySQL instances:
-    # update with your GCP project, the region of your Cloud SQL instance and the id of your Cloud SQL instance
-    # use port 3306 for MySQL, or other port you set for your SQL instance.
-    instances:
-      # GCP Cloud SQL instance id
-    - instance: ""
-      # GCP project where the instance exists.
-      project: ""
-      # GCP region where the instance exists.
-      region: ""
-      # Port number for the proxy to expose for this instance.
-      port: 3306
 
 cp-helm-charts:
   enabled: false
